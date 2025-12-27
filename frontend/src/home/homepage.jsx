@@ -1,14 +1,7 @@
-
+import axios from 'axios'
 import React, { useState } from 'react'
-
-function makeCode(length = 6) {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    let out = ''
-    for (let i = 0; i < length; i++) out += chars[Math.floor(Math.random() * chars.length)]
-    return out
-}
-
 export default function Homepage() {
+    const backendUrl = 'http://localhost:3000'
     const [url, setUrl] = useState('')
     const [short, setShort] = useState('')
     const [loading, setLoading] = useState(false)
@@ -19,10 +12,12 @@ export default function Homepage() {
         setLoading(true)
         
         // call backend from here 
-        await new Promise((r) => setTimeout(r, 600))
-        const code = makeCode(6)
-        const shortUrl = `${window.location.origin}/s/${code}`
-        setShort(shortUrl)
+        axios.post(`${backendUrl}/shorten`, { originalUrl: url }).then((res) => {
+            const { code } = res.data
+            const shortUrl = `${backendUrl}/${code}`
+            setShort(shortUrl)
+            setLoading(false)
+        })
         setLoading(false)
     }
 
@@ -36,6 +31,8 @@ export default function Homepage() {
             console.error(err)
         }
     }
+
+    
 
     return (
         <main className="hero" id="home">
