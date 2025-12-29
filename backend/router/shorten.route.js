@@ -5,9 +5,12 @@ import generateCode from '../utils/generateCode.js';
 
 router.post('/shorten', async (req, res) => {
     try{
-        const url=req.body.url;
+        const url=req.body.originalUrl;
         if(!url){
             return res.status(400).json({ error: 'URL is required' });
+        }
+        if (existing.rowCount > 0) {
+        return res.json({code: existing.rows[0].short_code});
         }
         let code = generateCode(6);
         let exists;
@@ -23,7 +26,7 @@ router.post('/shorten', async (req, res) => {
 
         let myquery="INSERT INTO urls (original_url, short_code) VALUES ($1, $2);"
         await client.query(myquery, [url, code]);
-        res.json({ short_code: code });
+        res.json({code});
 
     }catch(error){
         console.error( error);
