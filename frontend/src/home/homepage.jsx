@@ -1,11 +1,13 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { getRecentLinks } from "./../utils/recentLinks.js";
 export default function Homepage() {
     const backendUrl = 'http://localhost:3000'
     const [url, setUrl] = useState('')
     const [short, setShort] = useState('')
     const [loading, setLoading] = useState(false)
 
+    const links = getRecentLinks();
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!url) return
@@ -18,6 +20,7 @@ export default function Homepage() {
             setShort(shortUrl)
             setLoading(false)
         })
+        
         setLoading(false)
     }
 
@@ -62,6 +65,16 @@ export default function Homepage() {
                         </button>
                     </div>
                 )}
+                <div className='Recent'>
+                    <h2>Recent Shortened Links</h2>
+                    {links.forEach(link => {
+                            console.log(
+                            `${backendUrl}/${link.shortCode}`,
+                            link.originalUrl
+                            );
+                        })
+                    }
+                </div>
 
                 <section className="features" id="features">
                     <h2>Why use JSUrlShortner?</h2>
