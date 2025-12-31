@@ -14,7 +14,7 @@ dotenv.config();
 app.use(cors({
     origin: allowedOrigin,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Anon-Id']
 }));
 app.use(bodyParser.json());
 

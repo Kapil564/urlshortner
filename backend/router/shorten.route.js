@@ -9,7 +9,7 @@ router.post('/shorten', async (req, res) => {
         if(!url){
             return res.status(400).json({ error: 'URL is required' });
         }
-        const existing = await client(
+        const existing = await client.query(
             `SELECT short_code
             FROM urls
             WHERE original_url = $1
@@ -35,11 +35,11 @@ router.post('/shorten', async (req, res) => {
 
         let myquery="INSERT INTO urls (original_url, short_code) VALUES ($1, $2);"
         await client.query(myquery, [url, code]);
-        await redisClient.set(
-        `short:${code}`,
-        url,
-        { EX: 3600 }
-        );
+        // await redisClient.set(
+        // `short:${code}`,
+        // url,
+        // { EX: 3600 }
+        // );
         res.json({code});
 
     }catch(error){
