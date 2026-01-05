@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.get("/:shortId", async (req, res) => {
   const { shortId } = req.params;
-  const redisKey = `short:${shortId}`;
-
+  
   try {
+    const redisKey = `short:${shortId}`;
     const cachedUrl = await redisClient.get(redisKey);
     if (cachedUrl) {
-      await redisClient.expire(redisKey, 3600); // sliding TTL
+      await redisClient.expire(redisKey, 1200); // sliding TTL
       return res.redirect(cachedUrl);
     }
 

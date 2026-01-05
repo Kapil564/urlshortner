@@ -2,6 +2,7 @@ import express from 'express';
 import client from '../utils/client.js';
 const router = express.Router();
 import generateCode from '../utils/generateCode.js';
+import redisClient from '../config/redis.js';
 
 router.post('/shorten', async (req, res) => {
     try{
@@ -35,11 +36,11 @@ router.post('/shorten', async (req, res) => {
 
         let myquery="INSERT INTO urls (original_url, short_code) VALUES ($1, $2);"
         await client.query(myquery, [url, code]);
-        // await redisClient.set(
-        // `short:${code}`,
-        // url,
-        // { EX: 3600 }
-        // );
+        await redisClient.set(
+        `short:${code}`,
+        url,
+        { EX: 3600 }
+        );
         res.json({code});
 
     }catch(error){

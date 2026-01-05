@@ -1,12 +1,17 @@
 import { createClient } from "redis";
+import "dotenv/config";
 
 const redisClient = createClient({
-  url: "redis://localhost:6379"
+  url: process.env.REDIS_URL,
 });
 
-redisClient.on("error", (err) =>
-  console.error("Redis error:", err)
-);
+redisClient.on("connect", () => {
+  console.log("Connected to Redis Cloud ....");
+});
+
+redisClient.on("error", (err) => {
+  console.error("Redis error: ", err);
+});
 
 await redisClient.connect();
 
